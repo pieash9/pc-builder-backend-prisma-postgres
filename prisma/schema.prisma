@@ -14,35 +14,40 @@ datasource db {
 }
 
 model Users {
-  id        String    @id @default(uuid())
+  id        String     @id @default(uuid())
   username  String
   email     String
   password  String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Reviews   Reviews[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  reviews   Reviews[]
+  builders  Builders[]
 
   @@map("users")
 }
 
 model Category {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String      @id @default(uuid())
+  name       String
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  components Component[]
 
   @@map("category")
 }
 
 model Component {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   brand       String
   model       String
   description String
   price       String
   stock       String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  categoryId  String
+  categories  Category  @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  reviews     Reviews[]
 
   @@map("components")
 }
@@ -50,6 +55,8 @@ model Component {
 model BuildComponent {
   id        String   @id @default(uuid())
   quantity  String
+  builderId String
+  builders  Builders @relation(fields: [builderId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -57,21 +64,26 @@ model BuildComponent {
 }
 
 model Reviews {
-  id        String   @id @default(uuid())
-  comment   String
-  userId    String
-  users     Users    @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String    @id @default(uuid())
+  comment     String
+  userId      String
+  users       Users     @relation(fields: [userId], references: [id])
+  componentId String
+  components  Component @relation(fields: [componentId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   @@map("reviews")
 }
 
 model Builders {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String           @id @default(uuid())
+  name            String
+  userId          String
+  users           Users            @relation(fields: [userId], references: [id])
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  buildComponents BuildComponent[]
 
   @@map("builders")
 }
