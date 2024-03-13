@@ -2,6 +2,7 @@
 import express from 'express'
 import { UserRoutes } from '../modules/users/user.route'
 import { CategoryRoutes } from '../modules/catagories/catagories.routes'
+import { ComponentRoutes } from '../modules/components/components.routes'
 
 const router = express.Router()
 
@@ -13,6 +14,10 @@ const moduleRoutes: any[] = [
   {
     path: '/categories',
     route: CategoryRoutes,
+  },
+  {
+    path: '/components',
+    route: ComponentRoutes,
   },
 ]
 
